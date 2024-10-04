@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Load ZIP HTML</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
+</head>
+<body>
+    <h1>3D Model Viewer from ZIP</h1>
+    <iframe id="htmlViewer" width="100%" height="600px"></iframe>
+
+    <script>
+        // 假设你上传的文件名为 "sofaseahtml.zip"
+        const zipFilePath = 'sofaseahtml.zip';
+        const iframe = document.getElementById('htmlViewer');
+
+        // 使用 fetch 加载 zip 文件
+        fetch(zipFilePath)
+            .then(response => response.arrayBuffer())
+            .then(data => JSZip.loadAsync(data))
+            .then(zip => {
+                // 假设 zip 中包含一个名为 "index.html" 的文件
+                return zip.file("SofaSea.html").async("string");
+            })
+            .then(htmlContent => {
+                // 将 HTML 内容动态嵌入到 iframe 中
+                iframe.srcdoc = htmlContent;
+            })
+            .catch(error => console.error("Error loading ZIP or HTML file:", error));
+    </script>
+</body>
+</html>
